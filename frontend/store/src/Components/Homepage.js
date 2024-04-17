@@ -41,9 +41,25 @@ const Homepage = () => {
   useEffect(() => {
     fetch('http://localhost:8080/items')
     .then(response => response.json())
-    .then(data => {setAllItems(data)
-      console.log("data", data)
-      console.log("allite", allItems)
+    .then(data => {
+      const splitData = data.map(item => {
+        var firstString = '';
+        var newString = item.Description;
+        if(item.Description.length > 100){
+           firstString = item.Description.substring(0,99);
+           newString = firstString + '...';
+        }
+        return(
+          {
+            Id: item.Id,
+            UserId: item.UserId,
+            Name: item.Name,
+            Description: newString,
+            Quantity: item.Quantity
+          }
+        )
+      })
+      setAllItems(splitData)
     })
   },[])
 
