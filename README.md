@@ -1,7 +1,7 @@
 Inventory Tracker to keep track of various user's items
 
 Installation Steps:
-1. cd into the frontend folder and commandline: npm install
+1. cd into the frontend folder, and then the store folder and commandline: npm install
 2. commandline: npm start
 3. cd into the backend folder and commandline: npm install
 4. create a postgres database names 'postgres'
