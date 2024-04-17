@@ -5,16 +5,49 @@ import {useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 
 const ItemDiv = styled.div`
-  display: flex;
+display: flex;
   flex-flow: column;
   justify-items: center;
   justify-content: center;
   align-items: center;
   align-content: center;
-  gap: 5px;
-  border: 2px solid black;
-  margin: 10%;
+  gap: 20px;
+  background-color: #86d2e9;
   padding: 10px;
+  width: 300px;
+  height: 300px;
+  border: 4px solid white;
+`
+const CenteredDiv = styled.div`
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  margin: 20px;
+`
+const StyledHeader = styled.h2`
+  background-color: #f4b5d0;
+  padding: 2px;
+  color: #790557;
+  border: 12px solid white;
+`
+const StyledButton = styled.button`
+  background-color: #89b8a1;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  height: 30px;
+`
+const SecondButton = styled.button`
+  background-color: #790557;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  height: 30px;
 `
 
 const Manager = () => {
@@ -22,6 +55,7 @@ const Manager = () => {
 
   const {loggedInUser} = useContext(UserLog);
   const [userItems, setUserItems] = useState([]);
+  const [createBox, setCreateBox] = useState(0);
 
   useEffect(() => {
     console.log("logged in id", loggedInUser.Id)
@@ -50,19 +84,59 @@ const Manager = () => {
       })
   },[])
 
+  const addItem = () => {
+
+    let newName = document.getElementById("addName").value;
+    let newDescription = document.getElementById("addDescription").value;
+    let newQuantity = document.getElementById("addQuantity").value;
+
+    const newItem = {
+      Name: newName,
+      Description: newDescription,
+      Quantity: newQuantity
+    };
+
+    fetch(`http://localhost:8080/items/new/${loggedInUser.Id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newItem)
+    })
+    .then(response => {
+      console.log("post response", response)
+    })
+  }
+
   return (
     <>
-    <h2>Your Inventory</h2>
+    <StyledHeader>Showing {loggedInUser.First} {loggedInUser.Last}s Inventory</StyledHeader> <br />
+    <StyledButton onClick = { () => navigate('/homepage')}>View All Inventories</StyledButton>
+    <br />
+    <CenteredDiv>
     {userItems.map(item => {
       return(
       <ItemDiv>
         <h3>{item.Name}</h3>
         <p>{item.Description}</p>
         <p>Quantity: {item.Quantity}</p>
-        <button onClick={ () => navigate(`/item/${item.Id}`)}>View Full Item</button>
+        <StyledButton onClick={ () => navigate(`/item/${item.Id}`)}>View Full Item</StyledButton>
       </ItemDiv>
       )
     })}
+    </CenteredDiv>
+  <SecondButton onClick = {() => setCreateBox(1)}>Add Item</SecondButton>
+  {createBox === 1 ?
+    <ItemDiv>
+      <h3>Fill Out Details To Add Item Below:</h3>
+      <input type='text' id='addName' placeholder="Name:" />
+      <input type='text' id='addDescription' placeholder="Description:" />
+      <input type='text' id='addQuantity' placeholder="Quantity:" />
+      <StyledButton id='add-button' onClick={() => addItem()}>Add New Item</StyledButton>
+      </ItemDiv>
+      :
+      <></>
+    }
     </>
   )
 }

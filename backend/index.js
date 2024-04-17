@@ -106,5 +106,23 @@ app.delete('/remove/:itemid', (req, res) => {
   })
 })
 
+//POST
+app.post('/items/new/:userid', (req, res) => {
+  const {UserId} = req.params;
+  const { Name, Description, Quantity } = req.body;
+  knex('items')
+  .insert({ UserId,  Name, Description, Quantity })
+  .then(response =>{
+    res.status(201).json({ Name, Description, Quantity })
+  })
+})
+
+app.post('/users/new', (req, res) => {
+  const {First, Last, Username, Password} = req.body;
+  knex('users')
+  .insert({First, Last, Username, Password})
+  .then(response => res.status(201).json({First, Last, Username, Password}) )
+})
+
 
 app.listen(port, () => console.log(`express server listening on port ${port}`))
