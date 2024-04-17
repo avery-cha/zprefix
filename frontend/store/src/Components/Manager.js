@@ -91,20 +91,24 @@ const Manager = () => {
     let newQuantity = document.getElementById("addQuantity").value;
 
     const newItem = {
+      UserId: loggedInUser.Id,
       Name: newName,
       Description: newDescription,
       Quantity: newQuantity
     };
 
-    fetch(`http://localhost:8080/items/new/${loggedInUser.Id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+    console.log("newitem", newItem)
+
+    fetch(`http://localhost:8080/items/new`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
       body: JSON.stringify(newItem)
     })
     .then(response => {
       console.log("post response", response)
+      navigate('/homepage')
     })
   }
 
@@ -127,6 +131,7 @@ const Manager = () => {
     </CenteredDiv>
   <SecondButton onClick = {() => setCreateBox(1)}>Add Item</SecondButton>
   {createBox === 1 ?
+  <CenteredDiv>
     <ItemDiv>
       <h3>Fill Out Details To Add Item Below:</h3>
       <input type='text' id='addName' placeholder="Name:" />
@@ -134,6 +139,7 @@ const Manager = () => {
       <input type='text' id='addQuantity' placeholder="Quantity:" />
       <StyledButton id='add-button' onClick={() => addItem()}>Add New Item</StyledButton>
       </ItemDiv>
+      </CenteredDiv>
       :
       <></>
     }

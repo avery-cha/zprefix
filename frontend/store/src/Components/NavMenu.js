@@ -102,7 +102,7 @@ const NavMenu = () => {
   })
   .then(response => {
     console.log("post response", response)
-    window.location.reload()
+    navigate('/');
   })
 }
 

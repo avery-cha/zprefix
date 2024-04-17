@@ -65,7 +65,7 @@ const Item = () => {
     )
   },[])
 
-  const editItem = () => {
+  const editItem = async() => {
 
     let itemUpdate = {};
     itemUpdate.Name = document.getElementById("newName").value
@@ -74,14 +74,17 @@ const Item = () => {
 
     console.log("itemupdate", itemUpdate);
 
-    fetch(`http://localhost:8080/update/${code.toString()}`, {
+    await fetch(`http://localhost:8080/update/${code.toString()}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(itemUpdate),
     })
-    .then(response => console.log("response", response)
+    .then(response => {
+      console.log("response", response)
+      navigate('/homepage')
+    }
   )
   }
 

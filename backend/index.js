@@ -2,19 +2,10 @@ const express = require('express');
 var cors = require('cors')
 const app = express();
 const port = 8080;
+const axios = require('axios');
 const knex = require("knex")(require("./knexfile.js")["development"]);
 
-app.use(cors())
-
-// app.UseCors(builder =>
-//             builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
-// app.use((req, res) => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://localhost:8080");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-// });
+app.use(cors(), express.json())
 
 app.get('/', (req, res) => {
   res.status(200).json("hello from route")
@@ -107,14 +98,12 @@ app.delete('/remove/:itemid', (req, res) => {
 })
 
 //POST
-app.post('/items/new/:userid', (req, res) => {
-  const {UserId} = req.params;
-  const { Name, Description, Quantity } = req.body;
+app.post('/items/new', (req, res) => {
+  const {UserId, Name, Description, Quantity } = req.body;
+  console.log("req body", req.body)
   knex('items')
   .insert({ UserId,  Name, Description, Quantity })
-  .then(response =>{
-    res.status(201).json({ Name, Description, Quantity })
-  })
+  .then(response =>res.status(201).json({ Name, Description, Quantity }) )
 })
 
 app.post('/users/new', (req, res) => {
